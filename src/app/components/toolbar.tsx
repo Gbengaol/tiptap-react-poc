@@ -19,11 +19,11 @@ import { useCurrentEditor } from "@tiptap/react";
 
 type MenubarOptions = {
   name: Options;
-  elements: {
+  props: {
     icon: React.ReactNode;
     onClick: () => void;
     disabled?: boolean;
-    className: HTMLAttributes<HTMLDivElement>["className"];
+    isActive?: boolean;
   };
 };
 
@@ -45,114 +45,88 @@ export const ToolBar: FC<ToolBarProps> = ({
   const menubarOptions: MenubarOptions[] = [
     {
       name: "Bold",
-      elements: {
+      props: {
         icon: <Bold />,
         onClick: () => editor.chain().focus().toggleBold().run(),
         disabled: !editor.can().chain().focus().toggleBold().run(),
-        className: cn(
-          "size-8 p-2 rounded-full hover:scale-[1.05]",
-          editor.isActive("bold") && "bg-red-600 text-white p-1.5"
-        ),
+        isActive: editor.isActive("bold"),
       },
     },
     {
       name: "Italic",
-      elements: {
+      props: {
         icon: <Italic />,
         onClick: () => editor.chain().focus().toggleItalic().run(),
         disabled: !editor.can().chain().focus().toggleItalic().run(),
-        className: cn(
-          "size-8 p-2 rounded-full hover:scale-[1.05]",
-          editor.isActive("italic") && "bg-red-600 text-white"
-        ),
+        isActive: editor.isActive("italic"),
       },
     },
     {
       name: "Underline",
-      elements: {
+      props: {
         icon: <Underline />,
         onClick: () => editor.chain().focus().toggleUnderline().run(),
         disabled: !editor.can().chain().focus().toggleUnderline().run(),
-        className: cn(
-          "size-8 p-2 rounded-full hover:scale-[1.05]",
-          editor.isActive("underline") && "bg-red-600 text-white"
-        ),
+        isActive: editor.isActive("underline"),
       },
     },
     {
       name: "Strikethrough",
-      elements: {
+      props: {
         icon: <Strikethrough />,
         onClick: () => editor.chain().focus().toggleStrike().run(),
         disabled: !editor.can().chain().focus().toggleStrike().run(),
-        className: cn(
-          "size-8 p-2 rounded-full hover:scale-[1.05]",
-          editor.isActive("strike") && "bg-red-600 text-white"
-        ),
+        isActive: editor.isActive("strike"),
       },
     },
     {
       name: "Superscript",
-      elements: {
+      props: {
         icon: <Superscript />,
         onClick: () => editor.chain().focus().toggleSuperscript().run(),
         disabled: !editor.can().chain().focus().toggleSuperscript().run(),
-        className: cn(
-          "size-8 p-2 rounded-full hover:scale-[1.05]",
-          editor.isActive("superscript") && "bg-red-600 text-white"
-        ),
+        isActive: editor.isActive("superscript"),
       },
     },
     {
       name: "Subscript",
-      elements: {
+      props: {
         icon: <Subscript />,
         onClick: () => editor.chain().focus().toggleSubscript().run(),
         disabled: !editor.can().chain().focus().toggleSubscript().run(),
-        className: cn(
-          "size-8 p-2 rounded-full hover:scale-[1.05]",
-          editor.isActive("subscript") && "bg-red-600 text-white"
-        ),
+        isActive: editor.isActive("subscript"),
       },
     },
     {
       name: "Bullet List",
-      elements: {
+      props: {
         icon: <List />,
         onClick: () => editor.chain().focus().toggleBulletList().run(),
-        className: cn(
-          "size-8 p-2 rounded-full hover:scale-[1.05]",
-          editor.isActive("bulletList") && "bg-red-600 text-white"
-        ),
+        isActive: editor.isActive("bulletList"),
       },
     },
     {
       name: "Ordered List",
-      elements: {
+      props: {
         icon: <ListOrdered />,
         onClick: () => editor.chain().focus().toggleOrderedList().run(),
-        className: cn(
-          "size-8 p-2 rounded-full hover:scale-[1.05]",
-          editor.isActive("orderedList") && "bg-red-600 text-white"
-        ),
+        isActive: editor.isActive("orderedList"),
       },
     },
     {
       name: "Undo",
-      elements: {
+      props: {
         icon: <Undo />,
         onClick: () => editor.chain().focus().undo().run(),
         disabled: !editor.can().chain().focus().undo().run(),
-        className: "size-8 p-2 rounded-full hover:scale-[1.05]",
       },
     },
     {
       name: "Redo",
-      elements: {
+      props: {
         icon: <Redo />,
         onClick: () => editor.chain().focus().redo().run(),
         disabled: !editor.can().chain().focus().redo().run(),
-        className: "size-8 p-2 rounded-full hover:scale-[1.05]",
       },
     },
   ];
@@ -167,12 +141,15 @@ export const ToolBar: FC<ToolBarProps> = ({
         {filtered.map((option) => (
           <Button
             key={option.name}
-            onClick={option.elements.onClick}
-            disabled={option.elements.disabled}
-            className={option.elements.className}
+            onClick={option.props.onClick}
+            disabled={option.props.disabled}
             title={option.name}
+            className={cn(
+              "size-8 p-2 rounded-full hover:scale-[1.05]",
+              !!option.props.isActive && "bg-red-600 text-white"
+            )}
           >
-            {option.elements.icon}
+            {option.props.icon}
           </Button>
         ))}
         {toolbarCustomButtons?.map((el) => el)}

@@ -1,101 +1,89 @@
-import Image from "next/image";
+"use client";
+
+import React, { useState } from "react";
+import { Button } from "@/components/ui/button";
+import Tiptap from "./components/tiptap";
+import { cn } from "@/lib/utils";
 
 export default function Home() {
+  const [html, setHTML] = useState(content);
+  const handleChange = (val: string) => setHTML(val);
   return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="https://nextjs.org/icons/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-semibold">
-              src/app/page.tsx
-            </code>
-            .
-          </li>
-          <li>Save and see your changes instantly.</li>
-        </ol>
-
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
+    <div className="flex flex-col items-center justify-center min-h-screen p-8 overflow-hidden space-y-4">
+      <Tiptap
+        options={[
+          "Bold",
+          "Italic",
+          "Underline",
+          "Strikethrough",
+          "Monospace",
+          "Superscript",
+          "Subscript",
+          "Bullet List",
+          "Ordered List",
+          "Redo",
+          "Undo",
+        ]}
+        toolbarCustomButtons={[
+          <Button
+            className="size-8 p-2 rounded-full hover:scale-[1.05]"
+            key="x-button"
           >
-            <Image
-              className="dark:invert"
-              src="https://nextjs.org/icons/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:min-w-44"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
-        </div>
-      </main>
-      <footer className="row-start-3 flex gap-6 flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
+            X
+          </Button>,
+        ]}
+        toolbarHidden={false}
+        wrapperStyle={{
+          border: "0.5px solid gray",
+          width: "100%",
+          maxHeight: "1000svh",
+        }}
+        toolbarStyle={{
+          border: "none",
+          borderTop: "1px solid #f2f2f2",
+          boxShadow: "0 0 0 0",
+          overflowX: "auto",
+        }}
+        wrapperClassName={cn(
+          "w-full max-h-[1000svh] border border-[#f2f2f2] border-t-0"
+          // "flex flex-col-reverse"
+        )}
+        editorClassName="w-full bg-[#fafafa] border-none p-4 placeholder:text-[#b4b7c9] font-medium"
+        handleChange={handleChange}
+        initialContent={content}
+      />
+      <pre className="w-full max-h-96 border text-wrap p-2">{html}</pre>
     </div>
   );
 }
+
+const content = `
+<h2>
+  Hi there,
+</h2>
+<p>
+  this is a <em>basic</em> example of <strong>Tiptap</strong>. Sure, there are all kind of basic text styles you’d probably expect from a text editor. But wait until you see the lists:
+</p>
+<ul>
+  <li>
+    That’s a bullet list with one …
+  </li>
+  <li>
+    … or two list items.
+  </li>
+</ul>
+<p>
+  Isn’t that great? And all of that is editable. But wait, there’s more. Let’s try a code block:
+</p>
+<pre><code class="language-css">body {
+  display: none;
+}</code></pre>
+<p>
+  I know, I know, this is impressive. It’s only the tip of the iceberg though. Give it a try and click a little bit around. Don’t forget to check the other examples too.
+</p>
+<blockquote>
+  Wow, that’s amazing. Good work, boy! 👏
+  <br />
+  — Mom
+</blockquote>
+`;

@@ -1,7 +1,5 @@
 "use client";
 
-import { Color } from "@tiptap/extension-color";
-import ListItem from "@tiptap/extension-list-item";
 import TextStyle from "@tiptap/extension-text-style";
 import { EditorProvider } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
@@ -16,8 +14,7 @@ import { ToolBar } from "./toolbar";
 import { cn } from "@/lib/utils";
 
 const extensions = [
-  Color.configure({ types: [TextStyle.name, ListItem.name] }),
-  TextStyle.configure({ types: [ListItem.name] }),
+  TextStyle,
   StarterKit.configure({
     bulletList: {
       keepMarks: true,

@@ -19,10 +19,11 @@ export default function Home() {
           "Monospace",
           "Superscript",
           "Subscript",
-          "Bullet List",
-          "Ordered List",
+          "BulletList",
+          "OrderedList",
           "Redo",
           "Undo",
+          "Link",
         ]}
         toolbarCustomButtons={[
           <Button

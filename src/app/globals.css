@@ -65,6 +65,10 @@ body {
     }
   }
 
+  a {
+    color: red;
+  }
+
   /* Heading styles */
   h1,
   h2,

@@ -6,7 +6,8 @@ export type Options =
   | "Monospace"
   | "Superscript"
   | "Subscript"
-  | "Bullet List"
-  | "Ordered List"
+  | "BulletList"
+  | "OrderedList"
   | "Undo"
-  | "Redo";
+  | "Redo"
+  | "Link";

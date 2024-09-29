@@ -1,4 +1,4 @@
-import React, { FC, HTMLAttributes } from "react";
+import React, { FC, HTMLAttributes, useState } from "react";
 import { Options } from "../options.type";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -6,6 +6,7 @@ import { cn } from "@/lib/utils";
 import {
   Bold,
   Italic,
+  Link,
   List,
   ListOrdered,
   Redo,
@@ -16,6 +17,7 @@ import {
   Undo,
 } from "lucide-react";
 import { useCurrentEditor } from "@tiptap/react";
+import { TextEditorLinkDialog } from "./LinkDialog";
 
 type MenubarOptions = {
   name: Options;
@@ -40,7 +42,62 @@ export const ToolBar: FC<ToolBarProps> = ({
   toolbarStyle,
 }) => {
   const { editor } = useCurrentEditor();
+
+  const [open, setOpen] = useState(false);
+  const [href, setHref] = useState("");
+  const [title, setTitle] = useState("");
+
+  const handleClose = () => {
+    setOpen(false);
+    setTitle("");
+    setHref("");
+  };
+
   if (!editor) return null;
+
+  const openDialog = () => {
+    const { from, to } = editor.state.selection;
+    const text = editor.state.doc.textBetween(from, to, "");
+    const previousUrl = editor.getAttributes("link").href;
+
+    if (previousUrl) setHref(previousUrl);
+    if (text) setTitle(text);
+    setOpen(true);
+  };
+
+  const handleSetLink = () => {
+    // cancelled
+    if (href === null) return;
+    // empty - remove link and keep focus
+    if (href === "")
+      return editor.chain().focus().extendMarkRange("link").unsetLink().run();
+
+    const { from, to } = editor.state.selection;
+    const isWhiteSpaceInFront = !!editor.state.doc.textBetween(to, to + 1);
+
+    // Set the link and update the title
+    editor
+      .chain()
+      .focus()
+      .extendMarkRange("link")
+      .setLink({ href })
+      .insertContentAt({ from, to }, title)
+      .run();
+
+    // Move the cursor to the end of the inserted space, remove focus from the link
+    if (!isWhiteSpaceInFront) {
+      editor
+        .chain()
+        .setTextSelection(editor.state.selection.to + 1)
+        .insertContent(" ")
+        .splitBlock({
+          keepMarks: true,
+        })
+        .run();
+    }
+
+    handleClose();
+  };
 
   const menubarOptions: MenubarOptions[] = [
     {
@@ -98,7 +155,7 @@ export const ToolBar: FC<ToolBarProps> = ({
       },
     },
     {
-      name: "Bullet List",
+      name: "BulletList",
       props: {
         icon: <List />,
         onClick: () => editor.chain().focus().toggleBulletList().run(),
@@ -106,7 +163,7 @@ export const ToolBar: FC<ToolBarProps> = ({
       },
     },
     {
-      name: "Ordered List",
+      name: "OrderedList",
       props: {
         icon: <ListOrdered />,
         onClick: () => editor.chain().focus().toggleOrderedList().run(),
@@ -127,6 +184,14 @@ export const ToolBar: FC<ToolBarProps> = ({
         icon: <Redo />,
         onClick: () => editor.chain().focus().redo().run(),
         disabled: !editor.can().chain().focus().redo().run(),
+      },
+    },
+    {
+      name: "Link",
+      props: {
+        icon: <Link />,
+        onClick: openDialog,
+        isActive: editor.isActive("link"),
       },
     },
   ];
@@ -154,6 +219,17 @@ export const ToolBar: FC<ToolBarProps> = ({
         ))}
         {toolbarCustomButtons?.map((el) => el)}
       </div>
+
+      {/* Dialog for handling Links  */}
+      <TextEditorLinkDialog
+        open={open}
+        title={title}
+        setTitle={(title) => setTitle(title)}
+        href={href}
+        setHref={(title) => setHref(title)}
+        handleClose={handleClose}
+        handleSubmit={handleSetLink}
+      />
     </div>
   );
 };

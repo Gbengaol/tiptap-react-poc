@@ -7,6 +7,7 @@ import TipTapSubscript from "@tiptap/extension-subscript";
 import TipTapSuperscript from "@tiptap/extension-superscript";
 import TipTapUnderline from "@tiptap/extension-underline";
 import TipTapPlaceholder from "@tiptap/extension-placeholder";
+import TipTapLink from "@tiptap/extension-link";
 
 import React, { FC, HTMLAttributes } from "react";
 import { Options } from "../options.type";
@@ -28,6 +29,11 @@ const extensions = [
   TipTapSubscript,
   TipTapSuperscript,
   TipTapUnderline,
+  TipTapLink.configure({
+    openOnClick: false,
+    autolink: true,
+    defaultProtocol: "https",
+  }),
 ];
 
 interface TiptapProps {
